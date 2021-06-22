@@ -1,8 +1,8 @@
 const connection = require('../infra/connection')
 
-class Atendimento {
-    criar(atendimento, res) {
-        const clienteEhValido = atendimento.cliente.length >= 5
+class Survey {
+    criar(survey, res) {
+        const clienteEhValido = survey.cliente.length >= 5
         
         const validacoes = [
             {
@@ -18,13 +18,13 @@ class Atendimento {
         if(existemErros) {
             res.status(400).json(erros)
         } else {
-            const sql = 'INSERT INTO Atendimentos SET ?'
+            const sql = 'INSERT INTO Surveys SET ?'
             
-            connection.query(sql, atendimento, (erro, resultados) => {
+            connection.query(sql, survey, (erro, resultados) => {
                 if(erro) {
                     res.status(400).json(erro)
                 } else {
-                    res.status(201).json(atendimento)
+                    res.status(201).json({message: "atendimento criado com sucesso", data: survey})
                 }
             })
         }
@@ -32,7 +32,7 @@ class Atendimento {
     }
 
     listAll(res){
-        const sql = 'SELECT * FROM Atendimentos'
+        const sql = 'SELECT * FROM Surveys'
 
         connection.query(sql, (erro, results) => {
             if(erro){
@@ -43,7 +43,7 @@ class Atendimento {
         })
     }
     listById(id, res){
-        const sql = 'SELECT * FROM Atendimentos WHERE ID=?'
+        const sql = 'SELECT * FROM Surveys WHERE ID=?'
 
         connection.query(sql, id, (erro, results) => {
             if(erro){
@@ -57,15 +57,15 @@ class Atendimento {
     }
 
     delete(id, res){
-        const sql = 'DELETE FROM Atendimentos WHERE ID=?'
+        const sql = 'DELETE FROM Surveys WHERE ID=?'
 
         connection.query(sql, id, (erro, results) => {
             if(erro){
                 res.status(400).json(erro)
             }else{
-                res.status(200).json(results)
+                res.status(200).json({message: `O atendimento de ID ${id} foi apagado`})
             }
         })
     }
 }
-module.exports = new Atendimento
+module.exports = new Survey
